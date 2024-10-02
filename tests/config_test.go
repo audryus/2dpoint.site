@@ -11,11 +11,11 @@ import (
 func TestFromConfig(t *testing.T) {
 	cfg, err := config.New()
 	assert.Nil(t, err)
-	assert.Equal(t, cfg.HTTP.Addr, "0.0.0.0:3000")
+	assert.Equal(t, cfg.Http.Addr, "0.0.0.0:3000")
 
 	os.Setenv("HTTP_ADDR", ":3000")
 
 	cfg, err = config.New()
 	assert.Nil(t, err)
-	assert.Equal(t, cfg.HTTP.Addr, ":3000")
+	assert.Equal(t, cfg.Http.Addr, ":3000")
 }

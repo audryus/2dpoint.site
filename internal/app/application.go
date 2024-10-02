@@ -54,9 +54,6 @@ func Run() {
 	if err := srv.Stop(ctx); err != nil {
 		log.Fatal("failed to stop server: %v", err)
 	}
-
-	/*if err := mongoClient.Disconnect(context.Background()); err != nil {
-		logger.Error(err.Error())
-	}*/
+	etcdClient.Close()
 
 }

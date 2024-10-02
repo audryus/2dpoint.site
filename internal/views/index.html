@@ -16,13 +16,11 @@ Created by pixpalette.com - online design magazine -->
     <meta name="theme-color" content="#ffffff">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>To the Point</title>
-
     <script src="/public/js/tailwind.js"></script>
-    <script src="/public/js/htmx.min.js"></script>
 </head>
 
-<body class=" bg-white dark:bg-gray-900">
-    <section class="bg-white dark:bg-gray-900">
+<body class="bg-white dark:bg-gray-900">
+    <section id="section_home" class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
             <!-- div class="mx-auto justify-center max-w-screen-md sm:text-center flex  rounded-md shadow-sm mb-2"
                 role="group">
@@ -55,7 +53,6 @@ Created by pixpalette.com - online design magazine -->
                     <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
                         <div class="relative w-full">
                             <button type="submit" hx-post="/" hx-trigger="click" hx-target="section" hx-swap="outerHTML"
-                                hx-headers='{"X-Csrf-Token": "{{ 2dpoint_token }}"}'
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Take Me To the Point...
                             </button>
@@ -80,6 +77,9 @@ Created by pixpalette.com - online design magazine -->
             </div>
         </div>
     </section>
+
+    <script src="/public/js/htmx.min.js"></script>
+    <script src="/public/js/app.js"></script>
 </body>
 
 </html>

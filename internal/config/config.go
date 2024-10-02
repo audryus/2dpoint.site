@@ -8,7 +8,8 @@ type (
 	Config struct {
 		Server `yaml:"server"`
 		App    `yaml:"app"`
-		HTTP   `yaml:"http"`
+		Http   `yaml:"http"`
+		Etcd   `yaml:"etcd"`
 	}
 
 	Server struct {
@@ -21,8 +22,12 @@ type (
 		Version string `yaml:"version"`
 	}
 
-	HTTP struct {
+	Http struct {
 		Addr string `env-required:"true" yaml:"addr" env:"HTTP_ADDR"`
+	}
+
+	Etcd struct {
+		Addr string `env-required:"true" yaml:"addr" env:"ETCD_ADDR"`
 	}
 )
 

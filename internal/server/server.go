@@ -24,7 +24,7 @@ func NewServer(cfg config.Config, fiber *fiber.App) *HttpServer {
 }
 
 func (s *HttpServer) Run() error {
-	return s.fiber.Listen(s.cfg.HTTP.Addr)
+	return s.fiber.Listen(s.cfg.Http.Addr)
 }
 
 func (s *HttpServer) Stop(ctx context.Context) error {

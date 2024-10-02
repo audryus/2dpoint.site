@@ -2,7 +2,6 @@ package controller
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -39,23 +38,28 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
 	})
-
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: cfg.Server.Addr,
-	}))
-	app.Use(compress.New())
-	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key:    "LtceZ5qQJffGAJkzNTD1OE8Uq1WOhi4OmIWz+ciQyDg=",
-		Except: []string{"2dpoint_token"},
+		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
 	}))
 
-	app.Use(csrf.New(csrf.Config{
-		KeyLookup:      "header:X-Csrf-Token",
-		CookieName:     "2dpoint_token",
-		CookieSameSite: "Lax",
-		Expiration:     1 * time.Hour,
-		KeyGenerator:   utils.UUIDv4,
-	}))
+	app.Get("/:memo", func(c *fiber.Ctx) error {
+		uc := ct.usecases.GetMemo
+		m := c.Params("memo")
+		memo, err := uc.Get(m)
+		if err != nil {
+			return c.Status(404).SendString(err.Error())
+		}
+		conentType := c.Get("Content-Type", "text/html")
+
+		switch conentType {
+		case "application/json":
+			return c.JSON(memo)
+		}
+		return c.Redirect(memo.Url)
+	})
+
+	app.Use(compress.New())
 
 	static := fiber.Static{
 		Compress:      true,
@@ -70,35 +74,26 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 	app.Static("/public/js", "./internal/views/public/js", static)
 
 	app.Use(cache.New())
+	app.Use(encryptcookie.New(encryptcookie.Config{
+		Key:    "LtceZ5qQJffGAJkzNTD1OE8Uq1WOhi4OmIWz+ciQyDg=",
+		Except: []string{"2dpoint_token"},
+	}))
+
+	app.Use(csrf.New(csrf.Config{
+		KeyLookup:      "header:X-Csrf-Token",
+		CookieName:     "2dpoint_token",
+		CookieSameSite: "Lax",
+		Expiration:     1 * time.Hour,
+		KeyGenerator:   utils.UUIDv4,
+	}))
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		c.Set("Cache-Control", "private, max-age=86400")
+		//c.Set("Cache-Control", "private, max-age=86400")
 
 		csrf := c.Cookies("2dpoint_token", "")
-		fmt.Printf("csrf = %s\n\n", csrf)
-
 		return c.Render("index", fiber.Map{
 			"2dpoint_token": csrf,
 		})
-	})
-
-	app.Get("/:memo", func(c *fiber.Ctx) error {
-		uc := ct.usecases.GetMemo
-
-		m := c.Params("memo")
-		memo, err := uc.Get(m)
-
-		if err != nil {
-			return c.Status(404).SendString(err.Error())
-		}
-
-		conentType := c.Get("Content-Type", "text/html")
-
-		switch conentType {
-		case "application/json":
-			return c.JSON(memo)
-		}
-
-		return c.Redirect(memo.Url)
 	})
 
 	app.Post("/", func(c *fiber.Ctx) error {
@@ -109,7 +104,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		if err := c.BodyParser(req); err != nil {
 			return c.Status(400).SendString("lero " + err.Error())
 		}
-		fmt.Printf("req %v\n\n", req)
 
 		createdMemo, err := uc.Create(req.URL, req.Type)
 
@@ -124,9 +118,12 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 			return c.JSON(createdMemo)
 		}
 
+		csrf := c.Cookies("2dpoint_token", "")
+
 		return c.Render("index", fiber.Map{
-			"memo":      createdMemo,
-			"minimezed": cfg.Server.Addr + "/" + createdMemo.ID,
+			"memo":          createdMemo,
+			"minimezed":     cfg.Server.Addr + "/" + createdMemo.ID,
+			"2dpoint_token": csrf,
 		})
 	})
 
