@@ -25,5 +25,5 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:$(date +%s)
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:latest
               
