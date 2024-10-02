@@ -18,30 +18,65 @@ Created by pixpalette.com - online design magazine -->
     <title>To the Point</title>
 
     <script src="/public/js/tailwind.js"></script>
-    <script src="/public/js/htmx.min.js.gz"></script>
+    <script src="/public/js/htmx.min.js"></script>
 </head>
 
 <body class=" bg-white dark:bg-gray-900">
     <section class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+            <!-- div class="mx-auto justify-center max-w-screen-md sm:text-center flex  rounded-md shadow-sm mb-2"
+                role="group">
+                <button type="button"
+                    class="px-4 py-2 focus:outline-none text-white bg-yellow-400 border border-gray-200 rounded-s-lg hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium text-sm dark:focus:ring-yellow-900">
+                    URL
+                </button>
+                <button type="button"
+                    class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                    Text
+                </button>
+                <button type="button"
+                    class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+                    Text
+                </button>
+            </div -->
+
             <div class="mx-auto max-w-screen-md sm:text-center">
-                <form action="#">
+                <form>
+                    <input type="hidden" id="type" name="type" value="URL">
+
                     <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
                         <div class="relative w-full">
-                            <label for="email"
-                                class="hidden mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Email
-                                address</label>
-
-                            <input type="text" id="memo" name="memo"
+                            <input type="text" id="url" name="url"
                                 class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
                                 placeholder="https://example.com" required>
                         </div>
-                        <div>
-                            <button type="submit"
-                                class="py-3 px-5 w-full text-sm font-medium text-center text-white rounded-lg border cursor-pointer bg-primary-700 border-primary-600 sm:rounded-none sm:rounded-r-lg hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">Subscribe</button>
+
+                    </div>
+                    <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                        <div class="relative w-full">
+                            <button type="submit" hx-post="/" hx-trigger="click" hx-target="section" hx-swap="outerHTML"
+                                hx-headers='{"X-Csrf-Token": "{{ 2dpoint_token }}"}'
+                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                Take Me To the Point...
+                            </button>
                         </div>
                     </div>
                 </form>
+
+                {% if memo %}
+                <div class="mt-5 pt-5 mx-auto max-w-screen-md sm:text-center">
+                    <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                        <div class="relative w-full">
+                            <a href={{minimezed}} target="_self"
+                                class="block py-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                                <p class="font-normal text-gray-700 dark:text-gray-400">
+                                    {{minimezed}}</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
             </div>
         </div>
     </section>

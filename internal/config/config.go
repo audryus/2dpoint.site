@@ -6,7 +6,19 @@ import (
 
 type (
 	Config struct {
-		HTTP `yaml:"http"`
+		Server `yaml:"server"`
+		App    `yaml:"app"`
+		HTTP   `yaml:"http"`
+	}
+
+	Server struct {
+		Header string `yaml:"header"`
+		Addr   string `env-required:"true" yaml:"addr" env:"SERVER_ADDR"`
+	}
+
+	App struct {
+		Name    string `yaml:"name"`
+		Version string `yaml:"version"`
 	}
 
 	HTTP struct {

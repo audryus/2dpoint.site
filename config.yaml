@@ -1,3 +1,7 @@
+server:
+  header: '2dpoint'
+  addr: 'http://localhost:3000'
+
 app:
   name: '2dpoint.site'
   version: '0.1.0'
