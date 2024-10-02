@@ -24,7 +24,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v6
         with:
-          file: build/docker
+          file: build/docker/Dockerfile
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:latest
               
