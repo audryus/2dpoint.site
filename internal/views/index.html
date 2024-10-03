@@ -17,6 +17,8 @@ Created by pixpalette.com - online design magazine -->
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>To the Point</title>
     <script src="/public/js/tailwind.js"></script>
+    <link href="/public/css/fontawesome.min.css" rel="stylesheet" />
+    <link href="/public/css/solid.min.css" rel="stylesheet" />
 </head>
 
 <body class="bg-white dark:bg-gray-900">
@@ -39,7 +41,7 @@ Created by pixpalette.com - online design magazine -->
             </div -->
 
             <div class="mx-auto max-w-screen-md sm:text-center">
-                <form>
+                <form hx-on::after-request="this.reset()">
                     <input type="hidden" id="type" name="type" value="URL">
 
                     <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
@@ -52,33 +54,23 @@ Created by pixpalette.com - online design magazine -->
                     </div>
                     <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
                         <div class="relative w-full">
-                            <button type="submit" hx-post="/" hx-trigger="click" hx-target="section" hx-swap="outerHTML"
+                            <button type="submit" hx-post="/" hx-trigger="click" hx-target="#memos"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Take Me To the Point...
+                                2 D Point <i class="fa-solid fa-arrow-right ms-2"></i>
                             </button>
                         </div>
                     </div>
                 </form>
 
-                {% if memo %}
-                <div class="mt-5 pt-5 mx-auto max-w-screen-md sm:text-center">
-                    <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
-                        <div class="relative w-full">
-                            <a href={{minimezed}} target="_self"
-                                class="block py-2 bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                                <p class="font-normal text-gray-700 dark:text-gray-400">
-                                    {{minimezed}}</p>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                {% endif %}
-
+                <div id="memos"></div>
             </div>
+
         </div>
+
     </section>
 
     <script src="/public/js/htmx.min.js"></script>
+    <script src="/public/js/flowbite.min.js"></script>
     <script src="/public/js/app.js"></script>
 </body>
 

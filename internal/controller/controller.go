@@ -72,6 +72,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 	app.Static("/public/fonts", "./internal/views/public/fonts", static)
 	app.Static("/public/images", "./internal/views/public/images", static)
 	app.Static("/public/js", "./internal/views/public/js", static)
+	app.Static("/public/webfonts", "./internal/views/public/webfonts", static)
 
 	app.Use(cache.New())
 	app.Use(encryptcookie.New(encryptcookie.Config{
@@ -120,7 +121,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 
 		csrf := c.Cookies("2dpoint_token", "")
 
-		return c.Render("index", fiber.Map{
+		return c.Render("url", fiber.Map{
 			"memo":          createdMemo,
 			"minimezed":     cfg.Server.Addr + "/" + createdMemo.ID,
 			"2dpoint_token": csrf,

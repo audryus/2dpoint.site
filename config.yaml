@@ -4,7 +4,7 @@ server:
 
 app:
   name: '2dpoint.site'
-  version: '2.1.1'
+  version: '2.1.2'
 
 http:
   addr: ':3000'
