@@ -1,0 +1,19 @@
+server:
+  header: '2dpoint'
+  addr: 'http://localhost:3000'
+
+app:
+  name: '2dpoint.site'
+  version: '3.0.0'
+
+http:
+  addr: '0.0.0.0:3000'
+
+etcd:
+  host: 'localhost'
+  port: '58397'
+
+cockroach:
+  url: postgresql://admin@localhost:%s/%s?sslmode=disable
+  port: '26257'
+  database: 'cockroach'

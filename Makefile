@@ -12,6 +12,7 @@ air:
 	@go build -o bin/2dpoint.exe
 
 test:
+	@go clean -testcache
 	@go test -v ./tests/...
 
 docker:

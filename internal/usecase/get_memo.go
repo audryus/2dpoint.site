@@ -1,17 +1,25 @@
 package usecase
 
 import (
-	domain "github.com/audryus/2dpoint.site/internal/domain/memo"
+	"context"
+	"time"
+
+	"github.com/audryus/2dpoint.site/internal/domain/memo"
 )
 
 type GetMemo struct {
-	getMemo domain.GetMemoService
+	memoService memo.FetchService
 }
 
-func NewGetMemoUC(getMemo domain.GetMemoService) GetMemo {
-	return GetMemo{getMemo}
+func NewGetMemoUC(memoService memo.FetchService) GetMemo {
+	return GetMemo{
+		memoService,
+	}
 }
 
-func (u GetMemo) Get(id string) (domain.Memo, error) {
-	return u.getMemo.Get(id)
+func (u GetMemo) Get(id string) (*memo.Memo, error) {
+	ctx, timeout := context.WithTimeout(context.Background(), 2*time.Second)
+	defer timeout()
+
+	return u.memoService.Fetch(ctx, id)
 }

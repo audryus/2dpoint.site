@@ -8,13 +8,15 @@ import (
 
 	"github.com/audryus/2dpoint.site/internal/config"
 	"github.com/audryus/2dpoint.site/internal/usecase"
+	"github.com/audryus/2dpoint.site/pkg/logger"
+	"github.com/gofiber/contrib/fiberzerolog"
+	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/csrf"
 	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
-	"github.com/gofiber/fiber/v2/utils"
+	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/template/django/v3"
 )
 
@@ -38,10 +40,19 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
 	})
+
+	app.Use(swagger.New())
+
+	fiberLogger := logger.New()
+	app.Use(fiberzerolog.New(fiberzerolog.Config{
+		Logger: fiberLogger.Core(),
+	}))
+
 	app.Use(cors.New(cors.Config{
 		AllowOrigins: cfg.Server.Addr,
 		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
 	}))
+	app.Use(requestid.New())
 
 	app.Get("/:memo", func(c *fiber.Ctx) error {
 		uc := ct.usecases.GetMemo
@@ -56,7 +67,15 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		case "application/json":
 			return c.JSON(memo)
 		}
-		return c.Redirect(memo.Url)
+
+		switch memo.Kind {
+		case "text":
+			return c.SendString(memo.Content)
+		case "url":
+			return c.Redirect(memo.Content)
+		}
+
+		return c.Status(404).SendString(err.Error())
 	})
 
 	app.Use(compress.New())
@@ -80,13 +99,13 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		Except: []string{"2dpoint_token"},
 	}))
 
-	app.Use(csrf.New(csrf.Config{
+	/*app.Use(csrf.New(csrf.Config{
 		KeyLookup:      "header:X-Csrf-Token",
 		CookieName:     "2dpoint_token",
 		CookieSameSite: "Lax",
 		Expiration:     1 * time.Hour,
 		KeyGenerator:   utils.UUIDv4,
-	}))
+	}))*/
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		//c.Set("Cache-Control", "private, max-age=86400")
@@ -106,7 +125,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 			return c.Status(400).SendString("lero " + err.Error())
 		}
 
-		createdMemo, err := uc.Create(req.URL, req.Type)
+		createdMemo, err := uc.Create(req.Content)
 
 		if err != nil {
 			return c.Status(400).SendString("lera " + err.Error())
@@ -123,7 +142,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 
 		return c.Render("url", fiber.Map{
 			"memo":          createdMemo,
-			"minimezed":     cfg.Server.Addr + "/" + createdMemo.ID,
+			"minimezed":     cfg.Server.Addr + "/", //+ createdMemo.ID,
 			"2dpoint_token": csrf,
 		})
 	})
@@ -132,6 +151,5 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 }
 
 type Request struct {
-	Type string `json:"type" form:"type"`
-	URL  string `json:"url" form:"url"`
+	Content string `json:"content" form:"content"`
 }

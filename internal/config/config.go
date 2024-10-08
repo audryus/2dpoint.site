@@ -1,15 +1,20 @@
 package config
 
 import (
+	"path/filepath"
+	"runtime"
+
+	"github.com/audryus/2dpoint.site/pkg/logger"
 	"github.com/ilyakaznacheev/cleanenv"
 )
 
 type (
 	Config struct {
-		Server `yaml:"server"`
-		App    `yaml:"app"`
-		Http   `yaml:"http"`
-		Etcd   `yaml:"etcd"`
+		Server    `yaml:"server"`
+		App       `yaml:"app"`
+		Http      `yaml:"http"`
+		Etcd      `yaml:"etcd"`
+		Cockroach `yaml:"cockroach"`
 	}
 
 	Server struct {
@@ -27,20 +32,32 @@ type (
 	}
 
 	Etcd struct {
-		Addr string `env-required:"true" yaml:"addr" env:"ETCD_ADDR"`
+		Host string `env-required:"true" yaml:"host" env:"ETCD_HOST"`
+		Port string `env-required:"true" yaml:"port" env:"ETCD_PORT"`
+	}
+
+	Cockroach struct {
+		Url      string `env-required:"true" yaml:"url" env:"COCKROACH_URL"`
+		Database string `env-required:"true" yaml:"database" env:"COCKROACH_DATABASE"`
+		Port     string `env-required:"true" yaml:"port" env:"COCKROACH_PORT"`
 	}
 )
 
-func New() (Config, error) {
+func New(l logger.Log) (Config, error) {
+	_, file, _, _ := runtime.Caller(0)
+	dir := filepath.Dir(file)
+
 	var cfg Config
 
-	if err := cleanenv.ReadConfig("./config.yaml", &cfg); err != nil {
+	if err := cleanenv.ReadConfig(dir+"/config.yaml", &cfg); err != nil {
 		return cfg, err
 	}
 
 	if err := cleanenv.ReadEnv(&cfg); err != nil {
 		return cfg, err
 	}
+
+	l.Info("config loaded")
 
 	return cfg, nil
 }
