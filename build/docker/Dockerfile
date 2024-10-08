@@ -15,7 +15,7 @@ RUN CGO_ENABLED=0 make build
 FROM scratch
 COPY --from=builder /app/bin/2dpoint /app
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY ./internal/views /internal/views
-COPY config.yaml config.yaml
+COPY ./internal/views ./internal/views
+COPY ./internal/config/config.yaml ./internal/config/config.yaml
 EXPOSE 3000
 ENTRYPOINT ["/app"]
