@@ -10,7 +10,6 @@ import (
 	"github.com/audryus/2dpoint.site/internal/usecase"
 	"github.com/audryus/2dpoint.site/pkg/logger"
 	"github.com/gofiber/contrib/fiberzerolog"
-	"github.com/gofiber/contrib/swagger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
@@ -40,8 +39,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		JSONEncoder:  json.Marshal,
 		JSONDecoder:  json.Unmarshal,
 	})
-
-	app.Use(swagger.New())
 
 	fiberLogger := logger.New()
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
@@ -128,7 +125,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		createdMemo, err := uc.Create(req.Content)
 
 		if err != nil {
-			return c.Status(400).SendString("lera " + err.Error())
+			return c.Status(400).SendString(err.Error())
 		}
 
 		conentType := strings.Split(c.Get("Content-Type", "text/html"), ";")[0]

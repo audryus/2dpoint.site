@@ -1,8 +1,10 @@
 package config
 
 import (
+	"fmt"
 	"path/filepath"
 	"runtime"
+	"strings"
 
 	"github.com/audryus/2dpoint.site/pkg/logger"
 	"github.com/ilyakaznacheev/cleanenv"
@@ -46,9 +48,10 @@ type (
 func New(l logger.Log) (Config, error) {
 	_, file, _, _ := runtime.Caller(0)
 	dir := filepath.Dir(file)
+	dir = strings.Replace(dir, "/app/", "./", 1)
 
 	var cfg Config
-
+	fmt.Printf("dir: %s\n", dir)
 	if err := cleanenv.ReadConfig(dir+"/config.yaml", &cfg); err != nil {
 		return cfg, err
 	}
