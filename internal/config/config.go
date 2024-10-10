@@ -19,7 +19,7 @@ type (
 
 	Server struct {
 		Header string `yaml:"header"`
-		Addr   string `env-required:"true" yaml:"addr" env:"SERVER_ADDR"`
+		Addr   string `env-required:"true" yaml:"addr" env:"DPOINT_SERVER_ADDR"`
 	}
 
 	App struct {
@@ -28,18 +28,18 @@ type (
 	}
 
 	Http struct {
-		Addr string `env-required:"true" yaml:"addr" env:"HTTP_ADDR"`
+		Addr string `env-required:"true" yaml:"addr" env:"DPOINT_HTTP_ADDR"`
 	}
 
 	Etcd struct {
-		Host string `env-required:"true" yaml:"host" env:"ETCD_HOST"`
-		Port string `env-required:"true" yaml:"port" env:"ETCD_PORT"`
+		Host string `env-required:"true" yaml:"host" env:"DPOINT_ETCD_HOST"`
+		Port string `env-required:"true" yaml:"port" env:"DPOINT_ETCD_PORT"`
 	}
 
 	Cockroach struct {
-		Url      string `env-required:"true" yaml:"url" env:"COCKROACH_URL"`
-		Database string `env-required:"true" yaml:"database" env:"COCKROACH_DATABASE"`
-		Port     string `env-required:"true" yaml:"port" env:"COCKROACH_PORT"`
+		Url      string `env-required:"true" yaml:"url" env:"DPOINT_COCKROACH_URL"`
+		Database string `env-required:"true" yaml:"database" env:"DPOINT_COCKROACH_DATABASE"`
+		Port     string `env-required:"true" yaml:"port" env:"DPOINT_COCKROACH_PORT"`
 	}
 )
 

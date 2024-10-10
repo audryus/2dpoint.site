@@ -14,7 +14,7 @@ func Test_From_Config(t *testing.T) {
 	assert.Nil(t, err)
 	assert.Equal(t, cfg.Http.Addr, "0.0.0.0:3000")
 
-	os.Setenv("HTTP_ADDR", ":3000")
+	os.Setenv("DPOINT_HTTP_ADDR", ":3000")
 
 	cfg, err = config.New(logger.New())
 	assert.Nil(t, err)

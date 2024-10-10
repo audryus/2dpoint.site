@@ -40,7 +40,7 @@ func TestMain(m *testing.M) {
 		fmt.Println("Could not obtain cockroach port")
 		os.Exit(1)
 	}
-	os.Setenv("COCKROACH_PORT", port.Port())
+	os.Setenv("DPOINT_COCKROACH_PORT", port.Port())
 
 	cockroachDBContainer.Exec(ctx, []string{"sh", "-c", "./cockroach sql --insecure"})
 
@@ -61,7 +61,7 @@ func TestMain(m *testing.M) {
 		log.Fatal("Could not obtain etcd port ", err)
 		os.Exit(1)
 	}
-	os.Setenv("ETCD_PORT", port.Port())
+	os.Setenv("DPOINT_ETCD_PORT", port.Port())
 
 	l := logger.New()
 
