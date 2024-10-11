@@ -1,0 +1,91 @@
+{% if text %}
+<div class="mt-7 mx-auto mb-3 max-w-screen-md sm:text-center font-medium text-xl text-gray-700 dark:text-gray-400">
+    <div class="text-left">
+        as Text
+    </div>
+    <div class="flex flex-row mt-1 max-w-screen-md sm:text-center font-medium text-xl text-gray-700 dark:text-gray-400">
+        <div class="basis-1/2 text-left"><a href="{{text.ID}}" target="_blank">{{text.ID}}</a></div>
+        <div class="basis-1/2 text-right"><i id="{{url.Hash}}" data-popover-target="popover-copy"
+                onclick="copyTextToClipboard('{{text.ID}}')" class="popover fa-regular fa-copy ms-5 cursor-pointer"></i>
+        </div>
+    </div>
+
+</div>
+{% endif %}
+
+{% if urls %}
+<div class="border-t border-slate-400 mt-10">
+    {% for url in urls %}
+    <div
+        class="border-b border-slate-800 mx-auto mb-3 max-w-screen-md sm:text-center font-medium text-xl text-gray-700 dark:text-gray-400">
+        <div class="text-right">
+            {{url.Content}}
+        </div>
+        <div
+            class="flex flex-row mt-2 max-w-screen-md sm:text-center font-medium text-xl text-gray-700 dark:text-gray-400">
+            <div class="basis-1/2 text-left">{{url.ID}}</div>
+            <div class="basis-1/6 text-left"><a href="{{url.ID}}" target="_blank"><i id="{{url.Hash}}"
+                        data-popover-target="popover-open-link"
+                        class="popover fa-solid fa-arrow-up-right-from-square ms-5 cursor-pointer"></i></a>
+            </div>
+            <div class="basis-1/3 text-right"><i id="{{url.Hash}}" data-popover-target="popover-copy"
+                    onclick="copyTextToClipboard('{{url.ID}}')"
+                    class="popover fa-regular fa-copy ms-5 cursor-pointer"></i>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div data-popover id="popover-copy" role="tooltip"
+    class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-20 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+
+    <div class="p-3 space-y-2">
+        <h2 class="font-semibold text-gray-900 dark:text-white">Copy</h2>
+    </div>
+
+    <div data-popper-arrow></div>
+</div>
+
+<div data-popover id="popover-open-link" role="tooltip"
+    class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-50 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+
+    <div class="p-3 space-y-2">
+        <h2 class="font-semibold text-gray-900 dark:text-white">New window</h2>
+    </div>
+
+    <div data-popper-arrow></div>
+</div>
+
+<script>
+    // options with default values
+    const options = {
+        placement: 'top',
+        triggerType: 'hover',
+        offset: 10
+    };
+
+    // instance options object
+
+    // set the elements that trigger the popover using hover or click
+    const $triggerEls = document.getElementsByClassName('popover');
+
+
+    for (i = 0; i < $triggerEls.length; i++) {
+        let triggerEl = $triggerEls[i]
+        let instanceOptions = {
+            id: triggerEl.id
+        };
+
+        let targetEl = document.getElementById(triggerEl.getAttribute('data-popover-target'));
+
+        // set the popover content element
+        new Popover(targetEl, triggerEl, options, instanceOptions);
+    }
+
+    function copyTextToClipboard(text) {
+        navigator.clipboard.writeText(text);
+    }
+
+</script>

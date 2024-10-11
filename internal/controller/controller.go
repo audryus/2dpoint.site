@@ -63,7 +63,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 			return c.Redirect(memo.Content)
 		}
 
-		return c.Status(404).SendString(err.Error())
+		return c.Status(404).SendString("something is wrong, i can feel ...")
 	})
 
 	app.Use(compress.New())
@@ -86,10 +86,7 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 	app.Get("/", func(c *fiber.Ctx) error {
 		//c.Set("Cache-Control", "private, max-age=86400")
 
-		csrf := c.Cookies("2dpoint_token", "")
-		return c.Render("index", fiber.Map{
-			"2dpoint_token": csrf,
-		})
+		return c.Render("index", fiber.Map{})
 	})
 
 	app.Post("/", func(c *fiber.Ctx) error {
@@ -106,6 +103,10 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		if err != nil {
 			return c.Status(400).SendString(err.Error())
 		}
+		createdMemo.Text.ID = cfg.Server.Addr + "/" + createdMemo.Text.ID
+		for i := range createdMemo.Urls {
+			createdMemo.Urls[i].ID = cfg.Server.Addr + "/" + createdMemo.Urls[i].ID
+		}
 
 		conentType := strings.Split(c.Get("Content-Type", "text/html"), ";")[0]
 
@@ -114,12 +115,9 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 			return c.JSON(createdMemo)
 		}
 
-		csrf := c.Cookies("2dpoint_token", "")
-
-		return c.Render("url", fiber.Map{
-			"memo":          createdMemo,
-			"minimezed":     cfg.Server.Addr + "/", //+ createdMemo.ID,
-			"2dpoint_token": csrf,
+		return c.Render("memo", fiber.Map{
+			"text": createdMemo.Text,
+			"urls": createdMemo.Urls,
 		})
 	})
 

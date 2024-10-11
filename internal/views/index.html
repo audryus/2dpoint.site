@@ -24,31 +24,15 @@ Created by pixpalette.com - online design magazine -->
 <body class="bg-white dark:bg-gray-900">
     <section id="section_home" class="bg-white dark:bg-gray-900">
         <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-            <!-- div class="mx-auto justify-center max-w-screen-md sm:text-center flex  rounded-md shadow-sm mb-2"
-                role="group">
-                <button type="button"
-                    class="px-4 py-2 focus:outline-none text-white bg-yellow-400 border border-gray-200 rounded-s-lg hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium text-sm dark:focus:ring-yellow-900">
-                    URL
-                </button>
-                <button type="button"
-                    class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
-                    Text
-                </button>
-                <button type="button"
-                    class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
-                    Text
-                </button>
-            </div -->
-
             <div class="mx-auto max-w-screen-md sm:text-center">
                 <form hx-on::after-request="this.reset()">
                     <input type="hidden" id="type" name="type" value="URL">
 
                     <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
                         <div class="relative w-full">
-                            <input type="text" id="url" name="url"
+                            <textarea rows="10" cols="50" id="content" name="content"
                                 class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                                placeholder="https://example.com" required>
+                                required>Here are some links: https://example.com, http://test.org, and https://www.sample.net/page.</textarea>
                         </div>
 
                     </div>
@@ -64,14 +48,11 @@ Created by pixpalette.com - online design magazine -->
 
                 <div id="memos"></div>
             </div>
-
         </div>
-
     </section>
 
     <script src="/public/js/htmx.min.js"></script>
     <script src="/public/js/flowbite.min.js"></script>
-    <script src="/public/js/app.js"></script>
 </body>
 
 </html>
