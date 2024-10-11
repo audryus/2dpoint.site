@@ -26,7 +26,7 @@ jobs:
       - name: Versioning
         id: version
         run: |
-          cat .lazyver.yaml | head -n 1 | sed 's/version: //g' >> $GITHUB_OUTPUT
+          echo "output=$(cat .lazyver.yaml | head -n 1 | sed 's/version: //g' | tr -d '\n') >> $GITHUB_OUTPUT
       - name: Unit Tests
         run: make test
       - name: Login to Docker Hub
@@ -43,7 +43,7 @@ jobs:
           context: .
           file: build/docker/Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:${steps.version.outputs.*}   
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:${steps.version.outputs.output}   
           cache-from: type=gha
           cache-to: type=gha,mode=max
           github-token: ${{ secrets.TOKEN }}           
