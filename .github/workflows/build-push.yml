@@ -26,8 +26,7 @@ jobs:
       - name: Versioning
         id: version
         run: |
-          go install github.com/audryus/lazyver@latest 
-          lazyver semver -o >> $GITHUB_OUTPUT
+          cat .lazyver.yaml | head -n 1 | sed 's/version: //g' >> $GITHUB_OUTPUT
       - name: Unit Tests
         run: make test
       - name: Login to Docker Hub
