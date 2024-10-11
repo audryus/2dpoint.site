@@ -75,7 +75,7 @@ func (r TextRepo) FetchByHash(ctx context.Context, record *memo.Memo) (*memo.Mem
 
 	m := new(memo.Memo)
 
-	if err := pool.QueryRow(ctx, "SELECT id, kind, status, content, hash_code FROM text WHERE hash_code = $1", memo.Hash).Scan(&m.ID, &m.Kind, &m.Status, &m.Content, &m.Hash); err != nil {
+	if err := pool.QueryRow(ctx, "SELECT id, kind, status, content, hash_code FROM text WHERE hash_code = $1", record.Hash).Scan(&m.ID, &m.Kind, &m.Status, &m.Content, &m.Hash); err != nil {
 		return nil, &memo.NotFoundError{}
 	}
 
