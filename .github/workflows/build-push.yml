@@ -39,4 +39,7 @@ jobs:
           context: .
           file: build/docker/Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:latest              
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:latest   
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          github-token: ${{ secrets.TOKEN }}           

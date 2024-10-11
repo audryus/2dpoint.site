@@ -13,7 +13,7 @@ air:
 
 test:
 	@go clean -testcache
-	@go test -v ./tests/...
+	@gotestsum --packages="./tests/..." --format testname
 
 docker:
 	docker build -f ./build/docker/Dockerfile -t audryus/2dpoint-site .
