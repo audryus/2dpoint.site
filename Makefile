@@ -8,8 +8,11 @@ build:
 run: build 
 	@./bin/2dpoint
 
-air: 
+air: version
 	@go build -o bin/2dpoint.exe
+
+version:
+	@lazyver semver
 
 test:
 	@go clean -testcache

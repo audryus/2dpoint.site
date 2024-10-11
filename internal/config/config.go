@@ -1,7 +1,6 @@
 package config
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -54,7 +53,6 @@ func New(l logger.Log) (Config, error) {
 	}
 
 	var cfg Config
-	fmt.Printf("dir: %s\n", dir)
 	if err := cleanenv.ReadConfig(dir+"/config.yaml", &cfg); err != nil {
 		return cfg, err
 	}
