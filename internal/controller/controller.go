@@ -13,9 +13,6 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cache"
 	"github.com/gofiber/fiber/v2/middleware/compress"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/encryptcookie"
-	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/gofiber/template/django/v3"
 )
 
@@ -44,12 +41,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 	app.Use(fiberzerolog.New(fiberzerolog.Config{
 		Logger: fiberLogger.Core(),
 	}))
-
-	app.Use(cors.New(cors.Config{
-		AllowOrigins: cfg.Server.Addr,
-		AllowMethods: "GET,POST,HEAD,PUT,DELETE,PATCH",
-	}))
-	app.Use(requestid.New())
 
 	app.Get("/:memo", func(c *fiber.Ctx) error {
 		uc := ct.usecases.GetMemo
@@ -91,18 +82,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 	app.Static("/public/webfonts", "./internal/views/public/webfonts", static)
 
 	app.Use(cache.New())
-	app.Use(encryptcookie.New(encryptcookie.Config{
-		Key:    "LtceZ5qQJffGAJkzNTD1OE8Uq1WOhi4OmIWz+ciQyDg=",
-		Except: []string{"2dpoint_token"},
-	}))
-
-	/*app.Use(csrf.New(csrf.Config{
-		KeyLookup:      "header:X-Csrf-Token",
-		CookieName:     "2dpoint_token",
-		CookieSameSite: "Lax",
-		Expiration:     1 * time.Hour,
-		KeyGenerator:   utils.UUIDv4,
-	}))*/
 
 	app.Get("/", func(c *fiber.Ctx) error {
 		//c.Set("Cache-Control", "private, max-age=86400")
