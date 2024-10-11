@@ -43,7 +43,7 @@ jobs:
           context: .
           file: build/docker/Dockerfile
           push: true
-          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:${steps.version.outputs.output}   
+          tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:${{steps.version.outputs.output}}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           github-token: ${{ secrets.TOKEN }}           
