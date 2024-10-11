@@ -81,11 +81,12 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 	app.Static("/public/js", "./internal/views/public/js", static)
 	app.Static("/public/webfonts", "./internal/views/public/webfonts", static)
 
-	app.Use(cache.New())
+	app.Use(cache.New(cache.Config{
+		Expiration:   24 * time.Hour,
+		CacheControl: true,
+	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		//c.Set("Cache-Control", "private, max-age=86400")
-
 		return c.Render("index", fiber.Map{})
 	})
 
