@@ -26,7 +26,7 @@ jobs:
       - name: Versioning
         id: version
         run: |
-          go install github.com/audryus/lazyver 
+          go install github.com/audryus/lazyver@latest 
           lazyver -o >> $VERSION_OUTPUT
       - name: Unit Tests
         run: make test
