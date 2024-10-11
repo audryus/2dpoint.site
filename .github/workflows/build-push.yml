@@ -13,8 +13,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: ~/.cache/go-build ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: Install Go
-        uses: actions/setup-go@v2
+        uses: actions/setup-go@v5
         with:
           go-version: 1.23.1
       - name: Build
@@ -32,6 +38,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           platforms: linux/arm64
+          context: .
           file: build/docker/Dockerfile
           push: true
           tags: ${{ vars.DOCKERHUB_USERNAME }}/2dpoint-site:latest              
