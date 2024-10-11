@@ -27,7 +27,7 @@ jobs:
         id: version
         run: |
           go install github.com/audryus/lazyver@latest 
-          lazyver -o >> $GITHUB_OUTPUT
+          lazyver semver -o >> $GITHUB_OUTPUT
       - name: Unit Tests
         run: make test
       - name: Login to Docker Hub
