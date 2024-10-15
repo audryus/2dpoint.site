@@ -111,10 +111,10 @@ func TestMain(m *testing.M) {
 }
 
 func setup() {
-	//cockroachDBContainer.Start(context.Background())
-	//etcdContainer.Start(context.Background())
+	cockroachDBContainer.Start(context.Background())
+	etcdContainer.Start(context.Background())
 }
 func shutDown() {
-	//cockroachDBContainer.Terminate(context.Background())
-	//etcdContainer.Terminate(context.Background())
+	cockroachDBContainer.Terminate(context.Background())
+	etcdContainer.Terminate(context.Background())
 }
