@@ -93,6 +93,7 @@ func TestMain(m *testing.M) {
 		return migrator.Migrate(ctx, tx)
 	})
 	if err != nil {
+		fmt.Println("migration error")
 		log.Fatal(err)
 		os.Exit(1)
 	}
@@ -100,21 +101,10 @@ func TestMain(m *testing.M) {
 	//Catching all panics to once again make sure that shutDown is successfully run
 	defer func() {
 		if r := recover(); r != nil {
-			shutDown()
 			fmt.Println("Panic")
 		}
 	}()
-	setup()
-	code := m.Run()
-	shutDown()
-	os.Exit(code)
-}
 
-func setup() {
-	cockroachDBContainer.Start(context.Background())
-	etcdContainer.Start(context.Background())
-}
-func shutDown() {
-	cockroachDBContainer.Terminate(context.Background())
-	etcdContainer.Terminate(context.Background())
+	code := m.Run()
+	os.Exit(code)
 }
