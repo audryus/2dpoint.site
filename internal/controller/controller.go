@@ -1,7 +1,10 @@
 package controller
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -24,6 +27,20 @@ func NewController(usecases usecase.UseCases) Controller {
 	return Controller{
 		usecases,
 	}
+}
+
+type Request struct {
+	Content string `json:"content" form:"content"`
+	Nonce   string `json:"nonce" form:"nonce"`
+}
+
+func GenerateNonce(length int) (string, error) {
+	buffer := make([]byte, length)
+	_, err := rand.Read(buffer)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(buffer), nil
 }
 
 func (ct Controller) Init(cfg config.Config) *fiber.App {
@@ -86,8 +103,35 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		CacheControl: true,
 	}))
 
+	app.Use(func(c *fiber.Ctx) error {
+		nonce, err := GenerateNonce(8)
+		if err != nil {
+			return err
+		}
+		c.Locals("nonce", nonce)
+		err = c.Next()
+		c.Response().Header.Set("X-Content-Type-Options", "nosniff")
+		c.Response().Header.Set("X-Frame-Options", "DENY")
+		c.Response().Header.Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
+
+		nonceString := "nonce-" + nonce
+
+		c.Response().Header.Set("Content-Security-Policy", "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' '"+nonceString+"'")
+		c.Response().Header.Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		c.Response().Header.Set("Permissions-Policy", "geolocation=(self), microphone=()")
+		c.Response().Header.Set("X-XSS-Protection", "1; mode=block")
+
+		c.Response().Header.Set("Access-Control-Allow-Credentials", "true")
+		c.Response().Header.Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		c.Response().Header.Set("Access-Control-Allow-Origin", cfg.Server.Addr)
+
+		return err
+	})
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("index", fiber.Map{})
+		return c.Render("index", fiber.Map{
+			"nonce": c.Locals("nonce"),
+		})
 	})
 
 	app.Post("/", func(c *fiber.Ctx) error {
@@ -100,7 +144,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		}
 
 		createdMemo, err := uc.Create(req.Content)
-
 		if err != nil {
 			return c.Status(400).SendString(err.Error())
 		}
@@ -116,15 +159,14 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 			return c.JSON(createdMemo)
 		}
 
+		fmt.Println("aqui", req.Nonce)
+
 		return c.Render("memo", fiber.Map{
-			"text": createdMemo.Text,
-			"urls": createdMemo.Urls,
+			"text":  createdMemo.Text,
+			"urls":  createdMemo.Urls,
+			"nonce": req.Nonce,
 		})
 	})
 
 	return app
-}
-
-type Request struct {
-	Content string `json:"content" form:"content"`
 }

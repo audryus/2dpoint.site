@@ -24,13 +24,20 @@ func Run() {
 	logger := logger.New()
 
 	cfg, err := config.New(logger)
-
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	etcdClient, err := etcd.New(cfg, logger)
+	if err != nil {
+
+		log.Fatal(err)
+	}
+
 	db, err := cockroach.New(cfg, logger)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	urlRepo := url.NewUrlRepo(etcdClient)
 	urlCreateS := url.NewCreateUrlService(urlRepo)

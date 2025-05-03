@@ -26,6 +26,7 @@ type (
 	App struct {
 		Name    string `yaml:"name"`
 		Version string `yaml:"version"`
+		Env     string `yaml:"env"`
 	}
 
 	Http struct {
@@ -53,6 +54,7 @@ func New(l logger.Log) (Config, error) {
 	}
 
 	var cfg Config
+
 	if err := cleanenv.ReadConfig(dir+"/config.yaml", &cfg); err != nil {
 		return cfg, err
 	}

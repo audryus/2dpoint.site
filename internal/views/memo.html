@@ -58,9 +58,9 @@
     <div data-popper-arrow></div>
 </div>
 
-<script>
+<script nonce={{nonce}}>
     // options with default values
-    const options = {
+    var options = {
         placement: 'top',
         triggerType: 'hover',
         offset: 10
@@ -69,7 +69,7 @@
     // instance options object
 
     // set the elements that trigger the popover using hover or click
-    const $triggerEls = document.getElementsByClassName('popover');
+    var $triggerEls = document.getElementsByClassName('popover');
 
 
     for (i = 0; i < $triggerEls.length; i++) {

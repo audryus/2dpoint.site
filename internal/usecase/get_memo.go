@@ -21,5 +21,7 @@ func (u GetMemo) Get(id string) (*memo.Memo, error) {
 	ctx, timeout := context.WithTimeout(context.Background(), 2*time.Second)
 	defer timeout()
 
+	u.memoService.Fetch(ctx, id)
+	
 	return u.memoService.Fetch(ctx, id)
 }
