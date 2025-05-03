@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -59,30 +58,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		Logger: fiberLogger.Core(),
 	}))
 
-	app.Get("/:memo", func(c *fiber.Ctx) error {
-		uc := ct.usecases.GetMemo
-		m := c.Params("memo")
-		memo, err := uc.Get(m)
-		if err != nil {
-			return c.Status(404).SendString(err.Error())
-		}
-		conentType := c.Get("Content-Type", "text/html")
-
-		switch conentType {
-		case "application/json":
-			return c.JSON(memo)
-		}
-
-		switch memo.Kind {
-		case "text":
-			return c.SendString(memo.Content)
-		case "url":
-			return c.Redirect(memo.Content)
-		}
-
-		return c.Status(404).SendString("something is wrong, i can feel ...")
-	})
-
 	app.Use(compress.New())
 
 	static := fiber.Static{
@@ -91,6 +66,8 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		CacheDuration: time.Hour,
 	}
 
+	app.Static("/favicon.ico", "./internal/views/public/favicon/favicon.ico", static)
+	app.Static("/robots.txt", "./internal/views/robots.txt", static)
 	app.Static("/public/favicon", "./internal/views/public/favicon", static)
 	app.Static("/public/css", "./internal/views/public/css", static)
 	app.Static("/public/fonts", "./internal/views/public/fonts", static)
@@ -128,6 +105,30 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		return err
 	})
 
+	app.Get("/:memo", func(c *fiber.Ctx) error {
+		uc := ct.usecases.GetMemo
+		m := c.Params("memo")
+		memo, err := uc.Get(m)
+		if err != nil {
+			return c.Status(404).SendString(err.Error())
+		}
+		conentType := c.Get("Content-Type", "text/html")
+
+		switch conentType {
+		case "application/json":
+			return c.JSON(memo)
+		}
+
+		switch memo.Kind {
+		case "text":
+			return c.SendString(memo.Content)
+		case "url":
+			return c.Redirect(memo.Content)
+		}
+
+		return c.Status(404).SendString("something is wrong, i can feel ...")
+	})
+
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.Render("index", fiber.Map{
 			"nonce": c.Locals("nonce"),
@@ -158,8 +159,6 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		case "application/json":
 			return c.JSON(createdMemo)
 		}
-
-		fmt.Println("aqui", req.Nonce)
 
 		return c.Render("memo", fiber.Map{
 			"text":  createdMemo.Text,

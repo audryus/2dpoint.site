@@ -5,14 +5,6 @@ WORKDIR /modules
 RUN go mod download
 
 # Step 2: Builder
-FROM golang:1.23 AS tester
-COPY --from=modules /go/pkg /go/pkg
-COPY . /app
-WORKDIR /app
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 \
-    make test
-
-# Step 2: Builder
 FROM golang:1.23 AS builder
 COPY --from=modules /go/pkg /go/pkg
 COPY . /app
