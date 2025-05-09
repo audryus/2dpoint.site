@@ -1,6 +1,6 @@
 module github.com/audryus/2dpoint.site
 
-go 1.23.1
+go 1.24.0
 
 require (
 	github.com/cockroachdb/cockroach-go v2.0.1+incompatible
