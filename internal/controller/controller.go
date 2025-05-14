@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -30,16 +28,6 @@ func NewController(usecases usecase.UseCases) Controller {
 
 type Request struct {
 	Content string `json:"content" form:"content"`
-	Nonce   string `json:"nonce" form:"nonce"`
-}
-
-func GenerateNonce(length int) (string, error) {
-	buffer := make([]byte, length)
-	_, err := rand.Read(buffer)
-	if err != nil {
-		return "", err
-	}
-	return base64.URLEncoding.EncodeToString(buffer), nil
 }
 
 func (ct Controller) Init(cfg config.Config) *fiber.App {
@@ -60,40 +48,14 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 
 	app.Use(compress.New())
 
-	static := fiber.Static{
-		Compress:      true,
-		MaxAge:        86400,
-		CacheDuration: time.Hour,
-	}
-
-	app.Static("/favicon.ico", "./internal/views/public/favicon/favicon.ico", static)
-	app.Static("/robots.txt", "./internal/views/robots.txt", static)
-	app.Static("/public/favicon", "./internal/views/public/favicon", static)
-	app.Static("/public/css", "./internal/views/public/css", static)
-	app.Static("/public/fonts", "./internal/views/public/fonts", static)
-	app.Static("/public/images", "./internal/views/public/images", static)
-	app.Static("/public/js", "./internal/views/public/js", static)
-	app.Static("/public/webfonts", "./internal/views/public/webfonts", static)
-
-	app.Use(cache.New(cache.Config{
-		Expiration:   24 * time.Hour,
-		CacheControl: true,
-	}))
-
 	app.Use(func(c *fiber.Ctx) error {
-		nonce, err := GenerateNonce(8)
-		if err != nil {
-			return err
-		}
-		c.Locals("nonce", nonce)
-		err = c.Next()
+		err := c.Next()
+
 		c.Response().Header.Set("X-Content-Type-Options", "nosniff")
 		c.Response().Header.Set("X-Frame-Options", "DENY")
 		c.Response().Header.Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains")
 
-		nonceString := "nonce-" + nonce
-
-		c.Response().Header.Set("Content-Security-Policy", "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' '"+nonceString+"'")
+		c.Response().Header.Set("Content-Security-Policy", "default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-eval' 'unsafe-inline'")
 		c.Response().Header.Set("Referrer-Policy", "strict-origin-when-cross-origin")
 		c.Response().Header.Set("Permissions-Policy", "geolocation=(self), microphone=()")
 		c.Response().Header.Set("X-XSS-Protection", "1; mode=block")
@@ -129,10 +91,28 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		return c.Status(404).SendString("something is wrong, i can feel ...")
 	})
 
+	app.Use(cache.New(cache.Config{
+		Expiration:   24 * time.Hour,
+		CacheControl: true,
+	}))
+
+	static := fiber.Static{
+		Compress:      true,
+		MaxAge:        86400,
+		CacheDuration: time.Second,
+	}
+
+	app.Static("/favicon.ico", "./internal/views/public/favicon/favicon.ico", static)
+	app.Static("/robots.txt", "./internal/views/robots.txt", static)
+	app.Static("/public/favicon", "./internal/views/public/favicon", static)
+	app.Static("/public/css", "./internal/views/public/css", static)
+	app.Static("/public/fonts", "./internal/views/public/fonts", static)
+	app.Static("/public/images", "./internal/views/public/images", static)
+	app.Static("/public/js", "./internal/views/public/js", static)
+	app.Static("/public/webfonts", "./internal/views/public/webfonts", static)
+
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.Render("index", fiber.Map{
-			"nonce": c.Locals("nonce"),
-		})
+		return c.Render("index", fiber.Map{})
 	})
 
 	app.Post("/", func(c *fiber.Ctx) error {
@@ -161,9 +141,8 @@ func (ct Controller) Init(cfg config.Config) *fiber.App {
 		}
 
 		return c.Render("memo", fiber.Map{
-			"text":  createdMemo.Text,
-			"urls":  createdMemo.Urls,
-			"nonce": req.Nonce,
+			"text": createdMemo.Text,
+			"urls": createdMemo.Urls,
 		})
 	})
 

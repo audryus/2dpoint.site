@@ -12,43 +12,54 @@
     <link rel="mask-icon" href="/public/favicon/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
+    <meta name="description" content="Text and URLs Shortener">
+    <meta name="keywords" content="text shortner, url shortner, link simplifier">
+    <meta name="author" content="To the Point">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="To the Point - Text and URLs Shortener">
+    <meta property="og:description"
+        content="Paste text, extract links, and get shortener url to the point. URLs for better clarity.">
+    <meta property="og:image" content="/public/images/share-preview.png">
+    <meta property="og:url" content="https://2dpoint.site">
+    <meta name="twitter:card" content="summary_large_image">
 
-    <title>To the Point</title>
+    <title>To the Point - Instantly Text and URLs Shortener</title>
     <link href="/public/css/tailwind.css" rel="stylesheet" />
     <link href="/public/css/fontawesome.min.css" rel="stylesheet" />
     <link href="/public/css/solid.min.css" rel="stylesheet" />
 </head>
 
 <body class="bg-white dark:bg-gray-900">
-    <section id="section_home" class="bg-white dark:bg-gray-900">
-        <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
-            <div class="mx-auto max-w-screen-md sm:text-center">
-                <form hx-on::after-request="this.reset()">
-                    <input type="hidden" id="nonce" name="nonce" value="{{nonce}}">
+    <main>
+        <section id="section_home" class="bg-white dark:bg-gray-900">
+            <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
+                <div class="mx-auto max-w-screen-md sm:text-center">
+                    <h1 class="text-3xl font-bold mb-4 py-8 lg:py-16">Simplify Your Text and URLs</h1>
+                    <form hx-on::after-request="this.reset()">
+                        <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                            <div class="relative w-full">
+                                <textarea rows="10" cols="50" id="content" name="content"
+                                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
+                                    required
+                                    placeholder="Here are some links: https://example.com, http://test.org, and https://www.sample.net/page."></textarea>
+                            </div>
 
-                    <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
-                        <div class="relative w-full">
-                            <textarea rows="10" cols="50" id="content" name="content"
-                                class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 dark:shadow-sm-light"
-                                required
-                                placeholder="Here are some links: https://example.com, http://test.org, and https://www.sample.net/page."></textarea>
                         </div>
-
-                    </div>
-                    <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
-                        <div class="relative w-full">
-                            <button type="submit" hx-post="/" hx-trigger="click" hx-target="#memos"
-                                class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                2 D Point <i class="fa-solid fa-arrow-right ms-2"></i>
-                            </button>
+                        <div class="items-center mx-auto mb-3 space-y-4 max-w-screen-sm sm:flex sm:space-y-0">
+                            <div class="relative w-full py-8 lg:py-16">
+                                <button type="submit" hx-post="/" hx-trigger="click" hx-target="#memos"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    To the Point <i class="fa-solid fa-arrow-right ms-2"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
 
-                <div id="memos"></div>
+                    <div id="memos"></div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
     <script src="/public/js/htmx.min.js"></script>
     <script src="/public/js/flowbite.min.js"></script>
