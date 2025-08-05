@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/cockroachdb/cockroach-go v2.0.1+incompatible
 	github.com/gofiber/contrib/fiberzerolog v1.0.3
-	github.com/gofiber/fiber/v2 v2.52.7
+	github.com/gofiber/fiber/v2 v2.52.9
 	github.com/gofiber/template/django/v3 v3.1.13
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	github.com/jackc/pgx/v5 v5.7.4
